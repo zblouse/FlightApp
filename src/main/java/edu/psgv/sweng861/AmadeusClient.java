@@ -6,6 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class AmadeusClient {
 	//In actual production I would have these in either Vault or encrypt it with a key
 	private final String API_KEY = "YtbP1LgAPsLirTIPb1PFxVe0yNI9oCgv";
@@ -13,6 +15,7 @@ public class AmadeusClient {
 	private final String AMADEUS_BASE_URI = "https://test.api.amadeus.com";
 	
 	private HttpClient httpClient;
+	private ObjectMapper objectMapper;
 	
 	public AmadeusClient() {
 		httpClient = HttpClient.newHttpClient();
