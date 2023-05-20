@@ -19,14 +19,16 @@ public class AmadeusClient {
 	
 	public AmadeusClient() {
 		httpClient = HttpClient.newHttpClient();
+		objectMapper = new ObjectMapper();
 	}
 	
 	public void getFlights(String departCode, String arrivalCode, TravelClass travelClass, int tickets, boolean nonstop) {
-		String accessToken = getAccessToken();
+		//TODO add error handling for failure to get token
+		String accessToken = getAccessToken().getAccessToken();
 		System.out.println("ACCESS TOKEN: " + accessToken);
 	}
 	
-	private String getAccessToken() {
+	private AmadeusAccessToken getAccessToken() {
 		HttpRequest accessTokenRequest = HttpRequest.newBuilder()
 				.uri(URI.create(AMADEUS_BASE_URI+"/v1/security/oauth2/token"))
 				.POST(HttpRequest.BodyPublishers.ofString("grant_type=client_credentials&client_id=" + API_KEY + "&client_secret=" + API_SECRET))
@@ -34,11 +36,11 @@ public class AmadeusClient {
 				.build();
 		try {
 			HttpResponse<String> response = httpClient.send(accessTokenRequest, HttpResponse.BodyHandlers.ofString());
-			return response.body();
+			AmadeusAccessToken accessToken = objectMapper.readValue(response.body(),AmadeusAccessToken.class);
+			return accessToken;
 		} catch (IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "ERROR: " + e.getMessage();
+			return null;
 		}
 	}
 }
