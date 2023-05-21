@@ -1,10 +1,21 @@
 package edu.psgv.sweng861;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,10 +33,41 @@ public class AmadeusClient {
 		objectMapper = new ObjectMapper();
 	}
 	
-	public void getFlights(String departCode, String arrivalCode, TravelClass travelClass, int tickets, boolean nonstop) {
+	public void getFlights(String departCode, String arrivalCode, String departureDate, TravelClass travelClass, int tickets, boolean nonStop) {
 		//TODO add error handling for failure to get token
-		String accessToken = getAccessToken().getAccessToken();
-		System.out.println("ACCESS TOKEN: " + accessToken);
+		AmadeusAccessToken accessToken = getAccessToken();
+		String queryString = "?originLocationCode=" + departCode + "&destinationLocationCode=" + arrivalCode 
+				+ "&departureDate=" + departureDate + "&adults=" + tickets;
+		HttpRequest flightRequest = HttpRequest.newBuilder()
+				.uri(URI.create(AMADEUS_BASE_URI+"/v2/shopping/flight-offers"+queryString))
+				.header("Authorization","Bearer " + accessToken.getAccessToken())
+				.header("Accept", "*/*")
+				.header("Accept-Encoding", "gzip")
+				.build();
+		try {
+			System.out.println("Token: " + accessToken.getAccessToken());
+			HttpResponse<InputStream> response = httpClient.send(flightRequest, HttpResponse.BodyHandlers.ofInputStream());
+			GZIPInputStream gzipStream = new GZIPInputStream(response.body());
+			
+			byte[] readBuffer = new byte[5000];
+			String result = "";
+			int read = 0;
+			while(read != -1) {
+				read = gzipStream.read(readBuffer, 0, readBuffer.length);
+				String responseString = new String(readBuffer, "UTF-8");
+				result += responseString;
+			}
+			gzipStream.close();
+
+		    System.out.println("Response: " + result);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private AmadeusAccessToken getAccessToken() {
