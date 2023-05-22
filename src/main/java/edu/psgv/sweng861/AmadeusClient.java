@@ -74,7 +74,6 @@ public class AmadeusClient {
 	        byte[] emptyBuff = new byte[1024];
             StringBuffer unGzipRes = new StringBuffer();
             InputStream inputStream = response.getEntity().getContent();
-            inputStream.read(buff, 0, 1024);
             System.out.println("Printing DAta: " );
             //String firstLine = new String(buff, "UTF-8");
             //System.out.println("First Line length: " + firstLine.length());
@@ -92,7 +91,12 @@ public class AmadeusClient {
                 System.arraycopy(emptyBuff, 0, buff, 0,
                         1024);
             }
+            //String responseString = unGzipRes.toString();
             System.out.println("Response: " + unGzipRes.toString());
+            BufferedWriter writer = new BufferedWriter(new FileWriter("AmadeusResponse.txt"));
+            writer.write(unGzipRes.toString());
+            
+            writer.close();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
