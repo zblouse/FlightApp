@@ -46,15 +46,7 @@ public class AmadeusClient {
 	public void getFlights(String departCode, String arrivalCode, String departureDate, TravelClass travelClass, int tickets, boolean nonStop) {
 		//TODO add error handling for failure to get token
 		AmadeusAccessToken accessToken = getAccessToken();
-		System.out.println("Token: " + accessToken.getAccessToken());
-		String queryString = "?originLocationCode=" + departCode + "&destinationLocationCode=" + arrivalCode 
-				+ "&departureDate=" + departureDate + "&adults=" + tickets;
-		HttpRequest flightRequest = HttpRequest.newBuilder()
-				.uri(URI.create(AMADEUS_BASE_URI+"/v2/shopping/flight-offers"+queryString))
-				.header("Authorization","Bearer " + accessToken.getAccessToken())
-				.header("Accept", "*/*")
-				.header("Accept-Encoding", "gzip")
-				.build();
+		
 		HttpGet getRequest = new HttpGet();
 		
 		getRequest.addHeader("Authorization","Bearer " + accessToken.getAccessToken());
@@ -72,40 +64,36 @@ public class AmadeusClient {
 			CloseableHttpResponse response = client.execute(getRequest);
 	        byte[] buff = new byte[1024];
 	        byte[] emptyBuff = new byte[1024];
-            StringBuffer unGzipRes = new StringBuffer();
             InputStream inputStream = response.getEntity().getContent();
-            System.out.println("Printing DAta: " );
-            //String firstLine = new String(buff, "UTF-8");
-            //System.out.println("First Line length: " + firstLine.length());
-            //System.out.println(firstLine);
-            
+
+            StringBuilder stringBuilder = new StringBuilder();
+
             int byteCount = 0;
             while ((byteCount = inputStream.read(buff, 0, 1024)) > 0) {
-                // only append the buff elements that
-                // contains data
-                unGzipRes.append(new String(buff, "UTF-8"));
+                byte[] smallerBuff = new byte[byteCount];
+                smallerBuff = Arrays.copyOf(buff, byteCount);
 
-                // empty the buff for re-usability and
-                // prevent dirty data attached at the
-                // end of the buff
-                System.arraycopy(emptyBuff, 0, buff, 0,
-                        1024);
+                String newString = new String(smallerBuff, "UTF-8");
+                if(newString != "") {
+	                stringBuilder.append(newString);
+                }
+                System.arraycopy(emptyBuff, 0, buff, 0, 1024);
             }
-            //String responseString = unGzipRes.toString();
-            System.out.println("Response: " + unGzipRes.toString());
-            BufferedWriter writer = new BufferedWriter(new FileWriter("AmadeusResponse.txt"));
-            writer.write(unGzipRes.toString());
-            
-            writer.close();
+            System.out.println(stringBuilder.toString());
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
+			System.out.println("EXCEPTION:" + e.getMessage());
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
+			System.out.println("EXCEPTION:" + e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			System.out.println("EXCEPTION:" + e.getMessage());
 			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("EXCEPTION:" + e.getMessage());
 		}
 		
 		
