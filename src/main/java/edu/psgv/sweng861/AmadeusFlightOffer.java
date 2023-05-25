@@ -1,5 +1,7 @@
 package edu.psgv.sweng861;
 
+import java.util.List;
+
 public class AmadeusFlightOffer {
 	private String type;
 	private String id;
@@ -11,5 +13,6 @@ public class AmadeusFlightOffer {
 	private String lastTicketingDateTime;
 	private int numberOfBookableSeats;
 	private List<Itinerary> itineraries;
+	private Dictionaries dictionaries;
 	
 }

@@ -10,6 +10,7 @@ public class FlightSegment {
 	private String id;
 	private int numberOfStops;
 	private boolean blacklistedInEU;
+	private OperatingAirline operating;
 	
 	public void setDeparture(AirportEvent departure) {
 		this.departure = departure;
@@ -81,5 +82,13 @@ public class FlightSegment {
 	
 	public boolean isBlacklistedInEU() {
 		return this.blacklistedInEU;
+	}
+	
+	public void setOperating(OperatingAirline operating) {
+		this.operating = operating;
+	}
+	
+	public OperatingAirline getOperatingAirline() {
+		return this.operating;
 	}
 }
