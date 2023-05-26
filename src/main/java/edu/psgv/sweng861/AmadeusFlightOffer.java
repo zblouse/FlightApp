@@ -7,14 +7,17 @@ public class AmadeusFlightOffer {
 	private String id;
 	private String source;
 	private boolean instantTicketingRequired;
-	private boolean nonhomogenous;
+	private boolean nonHomogeneous;
 	private boolean oneWay;
 	private String lastTicketingDate;
 	private String lastTicketingDateTime;
 	private int numberOfBookableSeats;
 	private List<Itinerary> itineraries;
 	private Dictionaries dictionaries;
-	
+	private Price price;
+	private PricingOptions pricingOptions;
+	private List<String> validatingAirlineCodes;
+	private List<TravelerPricing> travelerPricings;
 	
 	public void setType(String type) {
 		this.type = type;
@@ -48,12 +51,12 @@ public class AmadeusFlightOffer {
 		return this.instantTicketingRequired;
 	}
 	
-	public void setNonhomogenous(boolean nonhomogenous) {
-		this.nonhomogenous = nonhomogenous;
+	public void setNonHomogeneous(boolean nonHomogeneous) {
+		this.nonHomogeneous = nonHomogeneous;
 	}
 	
-	public boolean isNonhomogenous() {
-		return this.nonhomogenous;
+	public boolean isNonHomogeneous() {
+		return this.nonHomogeneous;
 	}
 	
 	public void setOneWay(boolean oneWay) {
@@ -102,5 +105,47 @@ public class AmadeusFlightOffer {
 	
 	public Dictionaries getDictionaires() {
 		return this.dictionaries;
+	}
+	
+	public void setPrice(Price price) {
+		this.price = price;
+	}
+	
+	public Price getPrice() {
+		return this.price;
+	}
+	
+	public void setPricingOptions(PricingOptions pricingOptions) {
+		this.pricingOptions = pricingOptions;
+	}
+	
+	public PricingOptions getPricingOptions() {
+		return this.pricingOptions;
+	}
+	
+	public void setValidatingAirlineCodes(List<String> validatingAirlineCodes) {
+		this.validatingAirlineCodes = validatingAirlineCodes;
+	}
+	
+	public List<String> getValidatingAirlineCodes() {
+		return this.validatingAirlineCodes;
+	}
+	
+	public void setTravelerPricings(List<TravelerPricing> travelerPricings) {
+		this.travelerPricings = travelerPricings;
+	}
+	
+	public List<TravelerPricing> getTravelerPricings(){
+		return this.travelerPricings;
+	}
+	
+	@Override
+	public String toString() {
+		String amadeusFlightOfferString = "Flight Offer: Price: " + price.getGrandTotal();
+		amadeusFlightOfferString += "\nItineraries:";
+		for(Itinerary itinerary: itineraries) {
+			amadeusFlightOfferString += "\n" + itinerary.toString();
+		}
+		return amadeusFlightOfferString;
 	}
 }

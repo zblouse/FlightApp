@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PricingOptions {
 	private List<String> fareType;
-	private boolean includeCheckedBagsOnly;
+	private boolean includedCheckedBagsOnly;
 	
 	public void setFareType(List<String> fareType) {
 		this.fareType = fareType;
@@ -14,11 +14,11 @@ public class PricingOptions {
 		return this.fareType;
 	}
 	
-	public void setIncludeCheckedBagsOnly(boolean includeCheckedBagsOnly) {
-		this.includeCheckedBagsOnly = includeCheckedBagsOnly;
+	public void setIncludedCheckedBagsOnly(boolean includedCheckedBagsOnly) {
+		this.includedCheckedBagsOnly = includedCheckedBagsOnly;
 	}
 	
-	public boolean isIncludeCheckedBagsOnly() {
-		return this.includeCheckedBagsOnly;
+	public boolean isIncludedCheckedBagsOnly() {
+		return this.includedCheckedBagsOnly;
 	}
 }

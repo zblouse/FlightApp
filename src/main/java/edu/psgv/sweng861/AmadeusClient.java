@@ -79,7 +79,8 @@ public class AmadeusClient {
                 }
                 System.arraycopy(emptyBuff, 0, buff, 0, 1024);
             }
-            System.out.println(stringBuilder.toString());
+            AmadeusFlightOffersResponse amadeusFlightOffersResponse = objectMapper.readValue(stringBuilder.toString(),AmadeusFlightOffersResponse.class);
+            printResponse(amadeusFlightOffersResponse.getData().get(0));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			System.out.println("EXCEPTION:" + e.getMessage());
@@ -95,9 +96,6 @@ public class AmadeusClient {
 		} catch (Exception e) {
 			System.out.println("EXCEPTION:" + e.getMessage());
 		}
-		
-		
-
 	}
 	
 	private AmadeusAccessToken getAccessToken() {
@@ -116,5 +114,8 @@ public class AmadeusClient {
 		}
 	}
 	
+	private void printResponse(AmadeusFlightOffer amadeusFlightOffer) {
+		System.out.println(amadeusFlightOffer.toString());
+	}
 
 }

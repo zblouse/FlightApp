@@ -91,4 +91,13 @@ public class FlightSegment {
 	public OperatingAirline getOperatingAirline() {
 		return this.operating;
 	}
+	
+	@Override
+	public String toString() {
+		String flightSegmentString = "Carrier: " + carrierCode;
+		flightSegmentString = "\n\tDeparture: Airport: " + departure.getIataCode() +  " Time: " + departure.getAt();
+		flightSegmentString += "\n\tArrival: Airport: " + arrival.getIataCode() + " Time: " + arrival.getAt();
+			
+		return flightSegmentString;
+	}
 }
