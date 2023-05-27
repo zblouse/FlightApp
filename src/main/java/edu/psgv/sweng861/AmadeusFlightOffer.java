@@ -141,8 +141,8 @@ public class AmadeusFlightOffer {
 	
 	@Override
 	public String toString() {
-		String amadeusFlightOfferString = "Flight Offer: Price: " + price.getGrandTotal();
-		amadeusFlightOfferString += "\nItineraries:";
+		String amadeusFlightOfferString = "\tFlight Offer: Price: " + price.getGrandTotal();
+		amadeusFlightOfferString += "\n\tItineraries:";
 		for(Itinerary itinerary: itineraries) {
 			amadeusFlightOfferString += "\n" + itinerary.toString();
 		}

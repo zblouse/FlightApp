@@ -31,4 +31,13 @@ public class AmadeusFlightOffersResponse {
 		return this.dictionaries;
 	}
 	
+	@Override
+	public String toString() {
+		String flightOffersString = "";
+		for(AmadeusFlightOffer amadeusFlightOffer: data) {
+			flightOffersString += "\n" + amadeusFlightOffer.toString();
+		}
+		return flightOffersString;
+	}
+	
 }

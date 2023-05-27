@@ -1,5 +1,8 @@
 package edu.psgv.sweng861;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FlightSegment {
 	private AirportEvent departure;
 	private AirportEvent arrival;
@@ -94,9 +97,9 @@ public class FlightSegment {
 	
 	@Override
 	public String toString() {
-		String flightSegmentString = "Carrier: " + carrierCode;
-		flightSegmentString = "\n\tDeparture: Airport: " + departure.getIataCode() +  " Time: " + departure.getAt();
-		flightSegmentString += "\n\tArrival: Airport: " + arrival.getIataCode() + " Time: " + arrival.getAt();
+		String flightSegmentString = "\n\t\tCarrier: " + carrierCode;
+		flightSegmentString += "\n\t\tDeparture: Airport: " + departure.getIataCode() +  " Time: " + departure.getAt();
+		flightSegmentString += "\n\t\tArrival: Airport: " + arrival.getIataCode() + " Time: " + arrival.getAt();
 			
 		return flightSegmentString;
 	}

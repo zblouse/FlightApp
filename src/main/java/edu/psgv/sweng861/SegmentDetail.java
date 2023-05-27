@@ -6,7 +6,7 @@ public class SegmentDetail {
 	private String segmentId;
 	private TravelClass cabin;
 	private String fareBasis;
-	private TravelClass brandedFare;
+	private String brandedFare;
 	private String segmentClass;
 	private String sliceDiceIndicator;
 	private IncludedCheckedBags includedCheckedBags;
@@ -35,11 +35,11 @@ public class SegmentDetail {
 		return this.fareBasis;
 	}
 	
-	public void setBrandedFare(TravelClass brandedFare) {
+	public void setBrandedFare(String brandedFare) {
 		this.brandedFare = brandedFare;
 	}
 	
-	public TravelClass getBrandedFare() {
+	public String getBrandedFare() {
 		return this.brandedFare;
 	}
 	

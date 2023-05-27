@@ -24,7 +24,7 @@ public class Itinerary {
 	
 	@Override
 	public String toString() {
-		String itineraryString = "\tTotal Duration: " + duration;
+		String itineraryString = "\t\tTotal Duration: " + duration;
 		
 		for(FlightSegment flightSegment: segments) {
 			itineraryString += "\n" + flightSegment.toString();
