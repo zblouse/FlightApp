@@ -1,5 +1,8 @@
 package edu.psgv.sweng861;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AirportEvent {
 	private String iataCode;
 	private String at;

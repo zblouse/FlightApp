@@ -2,6 +2,9 @@ package edu.psgv.sweng861;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Dictionaries {
 	private Map<String, City> locations;
 	private Map<String, String> aircraft;

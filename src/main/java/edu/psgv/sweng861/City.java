@@ -1,5 +1,8 @@
 package edu.psgv.sweng861;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class City {
 	private String cityCode;
 	private String countryCode;

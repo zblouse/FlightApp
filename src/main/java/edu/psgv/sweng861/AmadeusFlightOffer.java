@@ -2,6 +2,9 @@ package edu.psgv.sweng861;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AmadeusFlightOffer {
 	private String type;
 	private String id;

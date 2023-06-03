@@ -1,7 +1,9 @@
 package edu.psgv.sweng861;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AmadeusAccessToken {
     private String type;
     private String username;

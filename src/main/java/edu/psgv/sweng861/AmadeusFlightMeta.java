@@ -2,6 +2,9 @@ package edu.psgv.sweng861;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AmadeusFlightMeta {
 	private int count;
 	private Map<String,String> links;
