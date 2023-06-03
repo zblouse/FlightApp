@@ -43,7 +43,7 @@ public class AmadeusClient {
 		objectMapper = new ObjectMapper();
 	}
 	
-	public void getFlights(String departCode, String arrivalCode, String departureDate, TravelClass travelClass, int tickets, boolean nonStop) {
+	public AmadeusFlightOffersResponse getFlights(String departCode, String arrivalCode, String departureDate, TravelClass travelClass, int tickets, boolean nonStop) {
 		//TODO add error handling for failure to get token
 		AmadeusAccessToken accessToken = getAccessToken();
 		
@@ -80,22 +80,11 @@ public class AmadeusClient {
                 System.arraycopy(emptyBuff, 0, buff, 0, 1024);
             }
             AmadeusFlightOffersResponse amadeusFlightOffersResponse = objectMapper.readValue(stringBuilder.toString(),AmadeusFlightOffersResponse.class);
-            printResponse(amadeusFlightOffersResponse);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			System.out.println("EXCEPTION:" + e.getMessage());
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			System.out.println("EXCEPTION:" + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("EXCEPTION:" + e.getMessage());
-			e.printStackTrace();
+            return amadeusFlightOffersResponse;
 		} catch (Exception e) {
 			System.out.println("EXCEPTION:" + e.getMessage());
 		}
+		return null;
 	}
 	
 	private AmadeusAccessToken getAccessToken() {
@@ -114,6 +103,7 @@ public class AmadeusClient {
 		}
 	}
 	
+	//TODO should be cleaned up
 	private void printResponse(AmadeusFlightOffersResponse amadeusFlightOffersResponse) {
 		System.out.println(amadeusFlightOffersResponse.toString());
 	}
