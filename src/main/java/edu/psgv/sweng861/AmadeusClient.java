@@ -57,7 +57,9 @@ public class AmadeusClient {
 					.addParameter("originLocationCode", departCode)
 					.addParameter("destinationLocationCode", arrivalCode)
 					.addParameter("departureDate", departureDate)
-					.addParameter("adults", ""+tickets)
+					.addParameter("adults", "" + tickets)
+					.addParameter("nonStop", "" + nonStop)
+					.addParameter("travelClass", travelClass.toString())
 					.build();
 			getRequest.setURI(uri);
 			CloseableHttpClient client = HttpClientBuilder.create().build();
