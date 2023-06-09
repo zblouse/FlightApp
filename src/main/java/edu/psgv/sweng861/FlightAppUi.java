@@ -38,9 +38,9 @@ public class FlightAppUi {
 		applicationFrame.setVisible(true);
 	}
 	
-	private void findFlightsButtonClicked(String startingAirport, String endingAirport, TravelClass travelClass, int tickets, boolean nonStop) {
+	private void findFlightsButtonClicked(String startingAirport, String endingAirport, String date, TravelClass travelClass, int tickets, boolean nonStop) {
 		AmadeusClient client = new AmadeusClient();
-		displayFlightListPanel(client.getFlights(startingAirport, endingAirport, "2023-11-01", travelClass, tickets, nonStop));
+		displayFlightListPanel(client.getFlights(startingAirport, endingAirport, date, travelClass, tickets, nonStop));
 	}
 	
 	private void displayflightSearchPanel() {
@@ -88,9 +88,19 @@ public class FlightAppUi {
 	
 	private void displayErrorPanel(String error) {
 		applicationFrame.remove(errorPanel);
-		JLabel errorLabel = new JLabel(error);
 		errorPanel = new JPanel();
+		errorPanel.setLayout(new BoxLayout(errorPanel, BoxLayout.Y_AXIS));
+		JLabel errorPanelLabel = new JLabel("AN ERROR HAS OCCURED");
+		errorPanel.add(errorPanelLabel);
+		JLabel errorLabel = new JLabel(error);
 		errorPanel.add(errorLabel);
+		JButton backButton = new JButton("Back");
+		backButton.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	        	displayflightSearchPanel();
+	          }
+	       });
+		errorPanel.add(backButton);
 		applicationFrame.add(errorPanel);
 		flightSearchPanel.setVisible(false);
 		flightDisplayPanel.setVisible(false);
@@ -131,13 +141,34 @@ public class FlightAppUi {
 		dataEntryPanel.add(nonStopLabel);
 		JCheckBox nonStopCheckBox = new JCheckBox();
 		dataEntryPanel.add(nonStopCheckBox);
+		JLabel flightDateLabel = new JLabel("Date");
+		dataEntryPanel.add(flightDateLabel);
+		JComboBox<String> monthComboBox = new JComboBox<String>();
+		String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+		monthComboBox.setModel(new DefaultComboBoxModel<String>(months));
+		monthComboBox.setMaximumSize(new Dimension(200,30));
+		dataEntryPanel.add(monthComboBox);
+		JComboBox<String> dayComboBox = new JComboBox<String>();
+		String[] days = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
+		dayComboBox.setModel(new DefaultComboBoxModel<String>(days));
+		dayComboBox.setMaximumSize(new Dimension(200,30));
+		dataEntryPanel.add(dayComboBox);
+		JComboBox<String> yearComboBox = new JComboBox<String>();
+		String[] years = {"2023", "2024", "2025"};
+		yearComboBox.setModel(new DefaultComboBoxModel<String>(years));
+		yearComboBox.setMaximumSize(new Dimension(200,30));
+		dataEntryPanel.add(yearComboBox);
 		
 		flightSearchPanel.add(dataEntryPanel);
 		
 		JButton findFlightsButton = new JButton("Find Flights");
 		findFlightsButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	        	 findFlightsButtonClicked(startingIataCodeField.getText(), endingIataCodeField.getText(), (TravelClass)travelClassComboBox.getSelectedItem(), (Integer)ticketsComboBox.getSelectedItem(), nonStopCheckBox.isSelected());
+	        	 try {
+					findFlightsButtonClicked(startingIataCodeField.getText(), endingIataCodeField.getText(), createDateString((String)monthComboBox.getSelectedItem(), (String)dayComboBox.getSelectedItem(), (String)yearComboBox.getSelectedItem()), (TravelClass)travelClassComboBox.getSelectedItem(), (Integer)ticketsComboBox.getSelectedItem(), nonStopCheckBox.isSelected());
+				} catch (Exception exception) {
+					displayErrorPanel(exception.getMessage());
+				}
 	          }
 	       });
 		flightSearchPanel.add(findFlightsButton);
@@ -149,5 +180,71 @@ public class FlightAppUi {
 	
 	private void initializeFlightDisplayPanel() {
 		flightDisplayPanel = new JPanel();
+	}
+	
+	private String createDateString(String month, String day, String year) throws Exception {
+		String monthNumber;
+		switch(month) {
+			case "January":
+				monthNumber="01";
+				break;
+			case "February":
+				if(year.equals("2024")) {
+					if(day.equals("30") || day.equals("31")) {
+						throw new Exception("Please Select a Valid Date");
+					}
+				} else{
+					if(day.equals("29") || day.equals("30") || day.equals("31")) {
+						throw new Exception("Please Select a Valid Date");
+					}
+				}
+				monthNumber = "02";
+				break;
+			case "March":
+				monthNumber="03";
+				break;
+			case "April":
+				if(day.equals("31")) {
+					throw new Exception("Please Select a Valid Date");
+				}
+				monthNumber="04";
+				break;
+			case "May":
+				monthNumber="05";
+				break;
+			case "June":
+				if(day.equals("31")) {
+					throw new Exception("Please Select a Valid Date");
+				}
+				monthNumber="06";
+				break;
+			case "July":
+				monthNumber="07";
+				break;
+			case "August":
+				monthNumber="08";
+				break;
+			case "September":
+				if(day.equals("31")) {
+					throw new Exception("Please Select a Valid Date");
+				}
+				monthNumber="09";
+				break;
+			case "October":
+				monthNumber="10";
+				break;
+			case "November":
+				if(day.equals("31")) {
+					throw new Exception("Please Select a Valid Date");
+				}
+				monthNumber="11";
+				break;
+			default:
+				monthNumber="12";
+				break;
+		}
+		
+		System.out.println(year + "-" + monthNumber + "-" + day);
+		return year + "-" + monthNumber + "-" + day;
 	}
 }
