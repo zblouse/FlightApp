@@ -23,6 +23,8 @@ public class FlightAppUi {
 	private JPanel flightSearchPanel;
 	private JPanel flightDisplayPanel;
 	private JPanel errorPanel;
+	private JPanel flightInfoPanel;
+	private Dictionaries dictionaries;
 	
 	public FlightAppUi() {
 		applicationFrame = new JFrame();
@@ -31,6 +33,7 @@ public class FlightAppUi {
 			initializeFlightSearchPanel();
 			initializeErrorPanel();
 			initializeFlightDisplayPanel();
+			initializeFlightInfoPanel();
 			applicationFrame.add(flightSearchPanel);
 		} catch (ParseException e) {
 			
@@ -54,6 +57,7 @@ public class FlightAppUi {
 		if(flightOffersResponse == null) {
 			displayErrorPanel("Error Retriving Flight Information");
 		} else {
+			dictionaries = flightOffersResponse.getDictionaries();
 			applicationFrame.remove(flightDisplayPanel);
 			flightDisplayPanel = new JPanel();
 			flightDisplayPanel.setLayout(new BoxLayout(flightDisplayPanel, BoxLayout.Y_AXIS));
@@ -62,6 +66,7 @@ public class FlightAppUi {
 			JPanel scrollingPanel = new JPanel();
 			scrollingPanel.setLayout(new BoxLayout(scrollingPanel, BoxLayout.Y_AXIS));
 			JScrollPane scrollPane = new JScrollPane(scrollingPanel);
+
 			for(AmadeusFlightOffer flightOffer: flightOffersResponse.getData()) {
 				scrollingPanel.add(formatFlightInfoButton(flightOffer));
 			}
@@ -81,9 +86,43 @@ public class FlightAppUi {
 		}
 	}
 	
+	//TODO GET PRICE IN USD
 	private JButton formatFlightInfoButton(AmadeusFlightOffer flightOffer) {
-		JButton flightButton = new JButton(flightOffer.toString());
+		JButton flightButton = new JButton("" + flightOffer.getPrice() + " " + dictionaries.getCarriers().get(flightOffer.getItineraries().get(0).getFlightSegments().get(0).getOperatingAirline().getCarrierCode()));
+		flightButton.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	        	 displayFlightInfoPanel(flightOffer);
+	          }
+	       });
 		return flightButton;
+	}
+	
+	private void displayFlightInfoPanel(AmadeusFlightOffer flightOffer) {
+		applicationFrame.remove(flightInfoPanel);
+		flightInfoPanel = new JPanel();
+		String flightInfoText = flightOffer.toString();
+		JLabel flightInfoLabel = new JLabel(flightInfoText);
+		flightInfoPanel.add(flightInfoLabel);
+		
+		JButton backButton = new JButton("Back");
+		backButton.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	        	 flightDisplayPanel.setVisible(true);
+	          }
+	       });
+		flightInfoPanel.add(backButton);
+		
+		
+		
+		errorPanel.setVisible(false);
+		flightSearchPanel.setVisible(false);
+		flightDisplayPanel.setVisible(false);
+		
+		applicationFrame.add(flightInfoPanel);
+	}
+	
+	private void initializeFlightInfoPanel() {
+		flightInfoPanel = new JPanel();
 	}
 	
 	private void displayErrorPanel(String error) {
