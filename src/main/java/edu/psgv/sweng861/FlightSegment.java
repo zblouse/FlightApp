@@ -95,11 +95,11 @@ public class FlightSegment {
 		return this.operating;
 	}
 	
-	@Override
-	public String toString() {
-		String flightSegmentString = "\n\t\tCarrier: " + carrierCode;
-		flightSegmentString += "\n\t\tDeparture: Airport: " + departure.getIataCode() +  " Time: " + departure.getAt();
-		flightSegmentString += "\n\t\tArrival: Airport: " + arrival.getIataCode() + " Time: " + arrival.getAt();
+	public String toString(Dictionaries dictionaries) {
+		String flightSegmentString = "\n\t\tCarrier: " + dictionaries.getCarriers().get(carrierCode);
+		flightSegmentString += "\n\t\tAircraft: " + dictionaries.getAircraft().get(aircraft.getCode());
+		flightSegmentString += "\n\t\tDeparture Airport: " + departure.getIataCode() +  " Time: " + departure.getAt();
+		flightSegmentString += "\n\t\tArrival Airport: " + arrival.getIataCode() + " Time: " + arrival.getAt();
 			
 		return flightSegmentString;
 	}

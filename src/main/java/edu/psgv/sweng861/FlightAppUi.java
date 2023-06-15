@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -36,7 +37,7 @@ public class FlightAppUi {
 			initializeFlightInfoPanel();
 			applicationFrame.add(flightSearchPanel);
 		} catch (ParseException e) {
-			
+			displayErrorPanel("Initialization Error");
 		}
 		applicationFrame.setVisible(true);
 	}
@@ -66,7 +67,7 @@ public class FlightAppUi {
 			JPanel scrollingPanel = new JPanel();
 			scrollingPanel.setLayout(new BoxLayout(scrollingPanel, BoxLayout.Y_AXIS));
 			JScrollPane scrollPane = new JScrollPane(scrollingPanel);
-
+			scrollPane.setBorder(BorderFactory.createEmptyBorder(25,25,25,25));
 			for(AmadeusFlightOffer flightOffer: flightOffersResponse.getData()) {
 				scrollingPanel.add(formatFlightInfoButton(flightOffer));
 			}
@@ -74,8 +75,8 @@ public class FlightAppUi {
 			JButton newSearchButton = new JButton("New Search");
 			newSearchButton.addActionListener(new ActionListener() {
 		         public void actionPerformed(ActionEvent e) {
-		        	displayflightSearchPanel();
-		          }
+		        	 displayflightSearchPanel();
+		         }
 		       });
 			flightDisplayPanel.add(newSearchButton);
 			applicationFrame.add(flightDisplayPanel);
@@ -88,20 +89,31 @@ public class FlightAppUi {
 	
 	//TODO GET PRICE IN USD
 	private JButton formatFlightInfoButton(AmadeusFlightOffer flightOffer) {
-		JButton flightButton = new JButton("" + flightOffer.getPrice() + " " + dictionaries.getCarriers().get(flightOffer.getItineraries().get(0).getFlightSegments().get(0).getOperatingAirline().getCarrierCode()));
+		String stopString = "";
+		if (flightOffer.getItineraries().get(0).getFlightSegments().size() == 1) {
+			stopString= "nonstop";
+		} else if (flightOffer.getItineraries().get(0).getFlightSegments().size() == 2) {
+			stopString = "1 stop";
+		} else {
+			stopString = "" + (flightOffer.getItineraries().get(0).getFlightSegments().size() - 1) + " stops";
+		}
+
+		JButton flightButton = new JButton("" + flightOffer.getPrice().getTotal() + " " + dictionaries.getCarriers().get(flightOffer.getItineraries().get(0).getFlightSegments().get(0).getCarrierCode()) + " " + stopString);
 		flightButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	        	 displayFlightInfoPanel(flightOffer);
 	          }
 	       });
+		flightButton.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		return flightButton;
 	}
 	
 	private void displayFlightInfoPanel(AmadeusFlightOffer flightOffer) {
 		applicationFrame.remove(flightInfoPanel);
 		flightInfoPanel = new JPanel();
-		String flightInfoText = flightOffer.toString();
-		JLabel flightInfoLabel = new JLabel(flightInfoText);
+		flightInfoPanel.setLayout(new BoxLayout(flightInfoPanel, BoxLayout.Y_AXIS));
+		String flightInfoText = flightOffer.toString(dictionaries);
+		JLabel flightInfoLabel = new JLabel("<html><pre>" + flightInfoText + "</pre></html>");
 		flightInfoPanel.add(flightInfoLabel);
 		
 		JButton backButton = new JButton("Back");

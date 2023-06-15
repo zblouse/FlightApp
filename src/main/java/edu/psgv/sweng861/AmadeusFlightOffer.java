@@ -142,12 +142,12 @@ public class AmadeusFlightOffer {
 		return this.travelerPricings;
 	}
 	
-	@Override
-	public String toString() {
+
+	public String toString(Dictionaries dictionaries) {
 		String amadeusFlightOfferString = "\tFlight Offer: Price: " + price.getGrandTotal();
 		amadeusFlightOfferString += "\n\tItineraries:";
 		for(Itinerary itinerary: itineraries) {
-			amadeusFlightOfferString += "\n" + itinerary.toString();
+			amadeusFlightOfferString += "\n" + itinerary.toString(dictionaries);
 		}
 		return amadeusFlightOfferString;
 	}

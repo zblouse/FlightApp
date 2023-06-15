@@ -25,12 +25,11 @@ public class Itinerary {
 		return this.segments;
 	}
 	
-	@Override
-	public String toString() {
+	public String toString(Dictionaries dictionaries) {
 		String itineraryString = "\t\tTotal Duration: " + duration;
 		
 		for(FlightSegment flightSegment: segments) {
-			itineraryString += "\n" + flightSegment.toString();
+			itineraryString += "\n" + flightSegment.toString(dictionaries);
 		}
 		return itineraryString;
 	}
