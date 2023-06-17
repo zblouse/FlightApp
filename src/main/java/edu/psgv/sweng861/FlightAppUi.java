@@ -18,6 +18,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.text.MaskFormatter;
 
+/**
+ * Displays and runs the UI for the flight app
+ * @author zachb
+ *
+ */
 public class FlightAppUi {
 
 	private JFrame applicationFrame;
@@ -27,6 +32,9 @@ public class FlightAppUi {
 	private JPanel flightInfoPanel;
 	private Dictionaries dictionaries;
 	
+	/**
+	 * Constructor, displays the initial panel
+	 */
 	public FlightAppUi() {
 		applicationFrame = new JFrame();
 		applicationFrame.setSize(1000, 1000);
@@ -42,17 +50,40 @@ public class FlightAppUi {
 		applicationFrame.setVisible(true);
 	}
 	
-	private void findFlightsButtonClicked(String startingAirport, String endingAirport, String date, TravelClass travelClass, int tickets, boolean nonStop) {
-		AmadeusClient client = new AmadeusClient();
-		displayFlightListPanel(client.getFlights(startingAirport, endingAirport, date, travelClass, tickets, nonStop));
+	/**
+	 * Instantiates a new JPanel for the flightInfoPanel
+	 */
+	private void initializeFlightInfoPanel() {
+		flightInfoPanel = new JPanel();
 	}
 	
+	/**
+	 * Instantiates a new JPanel for the errorPanel
+	 */
+	private void initializeErrorPanel() {
+		errorPanel = new JPanel();
+	}
+	
+	/**
+	 * Instantiates a new JPanel for the flightDisplayPanel
+	 */
+	private void initializeFlightDisplayPanel() {
+		flightDisplayPanel = new JPanel();
+	}
+	
+	/**
+	 * Displays the flightSearchPanel and turns off the other two panels.
+	 */
 	private void displayflightSearchPanel() {
 		flightSearchPanel.setVisible(true);
 		errorPanel.setVisible(false);
 		flightDisplayPanel.setVisible(false);
 	}
 	
+	/**
+	 * Displays the flightListPanel, and adds a button to the scroll pane for each flight offer
+	 * @param AmadeusFlightOffersResponse flightOffersResponse
+	 */
 	private void displayFlightListPanel(AmadeusFlightOffersResponse flightOffersResponse) {
 
 		if(flightOffersResponse == null) {
@@ -87,7 +118,11 @@ public class FlightAppUi {
 		}
 	}
 	
-	//TODO GET PRICE IN USD
+	/**
+	 * Creates a JButton with text of basic flight info and when clicked launches the FlightInfoPanel for the flight offer
+	 * @param AmadeusFlightOffer flightOffer
+	 * @return JButton
+	 */
 	private JButton formatFlightInfoButton(AmadeusFlightOffer flightOffer) {
 		String stopString = "";
 		if (flightOffer.getItineraries().get(0).getFlightSegments().size() == 1) {
@@ -108,6 +143,10 @@ public class FlightAppUi {
 		return flightButton;
 	}
 	
+	/**
+	 * Displays the FlightInfoPanel
+	 * @param AmadeusFlightOffer flightOffer
+	 */
 	private void displayFlightInfoPanel(AmadeusFlightOffer flightOffer) {
 		applicationFrame.remove(flightInfoPanel);
 		flightInfoPanel = new JPanel();
@@ -133,10 +172,10 @@ public class FlightAppUi {
 		applicationFrame.add(flightInfoPanel);
 	}
 	
-	private void initializeFlightInfoPanel() {
-		flightInfoPanel = new JPanel();
-	}
-	
+	/**
+	 * Displays the error panel
+	 * @param String error
+	 */
 	private void displayErrorPanel(String error) {
 		applicationFrame.remove(errorPanel);
 		errorPanel = new JPanel();
@@ -158,6 +197,10 @@ public class FlightAppUi {
 		errorPanel.setVisible(true);
 	}
 	
+	/**
+	 * Initializes the flightSearchPanel, creates all of the data entry UI elements
+	 * @throws ParseException
+	 */
 	private void initializeFlightSearchPanel() throws ParseException {
 		flightSearchPanel = new JPanel();
 		flightSearchPanel.setLayout(new BoxLayout(flightSearchPanel, BoxLayout.Y_AXIS));
@@ -225,14 +268,33 @@ public class FlightAppUi {
 		flightSearchPanel.add(findFlightsButton);
 	}
 	
-	private void initializeErrorPanel() {
-		errorPanel = new JPanel();
+	/**
+	 * Called when the User clicks the Find Flights button, initializes a new AmadeusClient and makes a call to get flights for the
+	 * user provided info.
+	 * @param String startingAirport
+	 * @param Stirng endingAirport
+	 * @param String date
+	 * @param TravelClass travelClass
+	 * @param int tickets
+	 * @param boolean nonStop
+	 */
+	private void findFlightsButtonClicked(String startingAirport, String endingAirport, String date, TravelClass travelClass, int tickets, boolean nonStop) {
+		AmadeusClient client = new AmadeusClient();
+		try {
+			displayFlightListPanel(client.getFlights(startingAirport, endingAirport, date, travelClass, tickets, nonStop));
+		} catch (Exception e) {
+			displayErrorPanel("Error getting access token. " + e.getMessage());
+		}
 	}
 	
-	private void initializeFlightDisplayPanel() {
-		flightDisplayPanel = new JPanel();
-	}
-	
+	/**
+	 * Formats the separate date UI fields into the date format the AmadeusAPI expects
+	 * @param String month
+	 * @param String day
+	 * @param String year
+	 * @return String the formatted date
+	 * @throws Exception, throws an exception if an invalid date was selected
+	 */
 	private String createDateString(String month, String day, String year) throws Exception {
 		String monthNumber;
 		switch(month) {
@@ -295,7 +357,6 @@ public class FlightAppUi {
 				break;
 		}
 		
-		System.out.println(year + "-" + monthNumber + "-" + day);
 		return year + "-" + monthNumber + "-" + day;
 	}
 }
