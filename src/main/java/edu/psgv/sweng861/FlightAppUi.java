@@ -259,6 +259,11 @@ public class FlightAppUi {
 		findFlightsButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	        	 try {
+	        		 System.out.println("StartingCode:" + startingIataCodeField.getText().getBytes());
+	        		 if(startingIataCodeField.getText().trim().equals("") || endingIataCodeField.getText().trim().equals("")) {
+	        			 throw new Exception("IATA codes required");
+	        			 
+	        		 }
 					findFlightsButtonClicked(startingIataCodeField.getText(), endingIataCodeField.getText(), createDateString((String)monthComboBox.getSelectedItem(), (String)dayComboBox.getSelectedItem(), (String)yearComboBox.getSelectedItem()), (TravelClass)travelClassComboBox.getSelectedItem(), (Integer)ticketsComboBox.getSelectedItem(), nonStopCheckBox.isSelected());
 				} catch (Exception exception) {
 					displayErrorPanel(exception.getMessage());
