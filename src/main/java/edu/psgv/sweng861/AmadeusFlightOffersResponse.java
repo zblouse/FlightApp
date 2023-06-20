@@ -2,11 +2,14 @@ package edu.psgv.sweng861;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * POJO for deserializing the AmadeusFlightOffer API response
  * @author zachb
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AmadeusFlightOffersResponse {
 	private AmadeusFlightMeta meta;
 	private List<AmadeusFlightOffer> data;

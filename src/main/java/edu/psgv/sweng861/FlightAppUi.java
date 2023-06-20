@@ -4,6 +4,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -86,7 +89,7 @@ public class FlightAppUi {
 	 */
 	private void displayFlightListPanel(AmadeusFlightOffersResponse flightOffersResponse) {
 
-		if(flightOffersResponse == null) {
+		if(flightOffersResponse == null || flightOffersResponse.getData() == null) {
 			displayErrorPanel("Error Retriving Flight Information");
 		} else {
 			dictionaries = flightOffersResponse.getDictionaries();
@@ -264,7 +267,12 @@ public class FlightAppUi {
 	        			 throw new Exception("IATA codes required");
 	        			 
 	        		 }
-					findFlightsButtonClicked(startingIataCodeField.getText(), endingIataCodeField.getText(), createDateString((String)monthComboBox.getSelectedItem(), (String)dayComboBox.getSelectedItem(), (String)yearComboBox.getSelectedItem()), (TravelClass)travelClassComboBox.getSelectedItem(), (Integer)ticketsComboBox.getSelectedItem(), nonStopCheckBox.isSelected());
+	        		 String dateString = createDateString((String)monthComboBox.getSelectedItem(), (String)dayComboBox.getSelectedItem(), (String)yearComboBox.getSelectedItem());
+	        		 if(isDateValid(dateString)) {
+	        			 findFlightsButtonClicked(startingIataCodeField.getText(), endingIataCodeField.getText(), dateString, (TravelClass)travelClassComboBox.getSelectedItem(), (Integer)ticketsComboBox.getSelectedItem(), nonStopCheckBox.isSelected());
+	        		 } else {
+	        			 throw new Exception("Date must not be before today");
+	        		 }
 				} catch (Exception exception) {
 					displayErrorPanel(exception.getMessage());
 				}
@@ -363,5 +371,46 @@ public class FlightAppUi {
 		}
 		
 		return year + "-" + monthNumber + "-" + day;
+	}
+	
+	/**
+	 * Returns true if the provided dateString is either after today, or is today.
+	 * @param String dateString
+	 * @return boolean
+	 */
+	private boolean isDateValid(String dateString) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String today = df.format(new Date());
+		String[] splitInput = dateString.split("-");
+		String[] splitToday = today.split("-");
+		
+		//Make sure the year isn't before the current year
+		if(Integer.parseInt(splitInput[0]) < Integer.parseInt(splitToday[0])) {
+			return false;
+		}
+		
+		//If the input year is after the current one, the date is valid
+		if(Integer.parseInt(splitInput[0]) > Integer.parseInt(splitToday[0])) {
+			return true;
+		}
+		
+		//Year is the same
+		
+		//Check if the input month is after the current month
+		if(Integer.parseInt(splitInput[1]) > Integer.parseInt(splitToday[1])) {
+			return true;
+		}
+		
+		//Check if the input month is before the current month
+		if(Integer.parseInt(splitInput[1]) < Integer.parseInt(splitToday[1])) {
+			return false;
+		}
+		//Month is the same
+		//Check if the input day is after or equal to today
+		if(Integer.parseInt(splitInput[2]) >= Integer.parseInt(splitToday[2])) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
