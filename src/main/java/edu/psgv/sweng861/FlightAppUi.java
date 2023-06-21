@@ -161,7 +161,9 @@ public class FlightAppUi {
 		JButton backButton = new JButton("Back");
 		backButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
+	        	 flightInfoPanel.setVisible(false);
 	        	 flightDisplayPanel.setVisible(true);
+	        	 
 	          }
 	       });
 		flightInfoPanel.add(backButton);
